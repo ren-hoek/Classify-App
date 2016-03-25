@@ -1,0 +1,70 @@
+{% extends "layout.html" %}
+{% block head %}
+{{ super() }}
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-sm-1"></div>
+		<div class="col-sm-10">
+			<div class="jumbo">
+				<h2>About</h2>
+				<h3>Text Classification With Naive Bayes Classifier</h3>
+				<h4>Methods</h4>
+				<h5>Featuresets</h5>
+				<p>Bag of words representations were constructed from the free text fields of interest (i.e.
+				job title and description). These representations formed the featuresets for the classifiers,
+				for the job title classification, a number of other variables (gender, age, industry) were also included
+				in the featureset. The coded fields provided the training examples for the classifiers.</p>
+				<h5>Naive Bayes Classifier</h5>
+				<p>Naive Bayes Classification is based around calculating the conditional probability of each of the
+				classes given a featureset,
+				\[P(C_{k} \mid x_{1}, \dots, x_{n})\]
+				where \(\boldsymbol{x} = (x_{1}, \dots x_{n})\) is the featureset (i.e. bag of words for job title or
+				description) and \(C_{k}\) the classes (i.e. codes).</p>
+				<p>Rewriting using Bayes' Theorem gives,
+				\[P(C_{k} \mid \boldsymbol{x}) = \frac{P(C_{k})P(\boldsymbol{x} \mid C_{k})}{P(\boldsymbol{x})}\]
+				For a given featureset \(P(\boldsymbol{x})\) is a constant, so,
+			  \begin{equation}
+				P(C_{k} \mid \boldsymbol{x}) = \frac{1}{Z}P(C_{k})P(\boldsymbol{x} \mid C_{k})
+				\end{equation}
+				where \(P(\boldsymbol{x})=Z\).</p>
+				<p>Expanding \(P(\boldsymbol{x} \mid C_{k})\),
+				\begin{align}
+				P(C_{k} \mid x_{1}, \dots, x_{n})&\propto P(C_{k})P(x_{1}\mid C_{k})P(x_{2},\dots,x_{n}\mid C_{k}, x_{1})\\
+				&\propto P(C_{k})P(x_{1}\mid C_{k})P(x_{2} \mid C_{k}, x_{1})P(x_{3},\dots,x_{n}\mid C_{k}, x_{1}, x_{2})\\
+				&\propto P(C_{k})P(x_{1}\mid C_{k})\dots P(x_{n}\mid C_{k}, x_{1}, x_{2}, \dots, x_{n-1})\\
+				\end{align}
+				To simiplify this to Naive Bayes Classification, a conditional independence assumption is made for the
+				featureset. All features are conditionally independent from each other i.e. for \(i \ne j \ne m \),
+				\begin{align}
+				P(x_{i} \mid C_{k}, x_{j}) &= P(x_{i} \mid C_{k}) \\
+				P(x_{i} \mid C_{k}, x_{j}, x_{m}) &= P(x_{i} \mid C_{k})\ \text{etc}
+				\end{align}
+				Rewriting using this assumption gives,
+				\begin{align}
+				P(C_{k} \mid x_{1}, \dots, x_{n}) &\propto P(C_{k})P(x_{1} \mid C_{k})P(x_{2} \mid C_{k}) \dots P(x_{n} \mid C_{k}) \\
+				P(C_{k} \mid x_{1}, \dots, x_{n}) &\propto P(C_{k})\prod\limits_{i=1}^{n}P(x_{i} \mid C_{k})
+				\end{align}
+				This leads to the following set of probabilities for a given featureset,
+				\begin{equation}
+				P(C_{k} \mid x_{1}, \dots, x_{n}) = \frac{1}{Z} P(C_{k}) \prod\limits_{i=1}^{n}P(x_{i} \mid C_{k})
+				\end{equation}
+				The training dataset produces estimates of the various probabilites.
+				This calculated set of probabilities is then combined with a decision rule to produce the predictor
+				for the classifier. One common rule is to select the most probable class, \(C_{\hat{k}}\),
+				\[
+				\DeclareMathOperator*{\argmax}{arg\,max}
+        		\begin{equation}
+				C_{\hat{k}} = \argmax_{k \in \{1,\dots,n\}}\Big{(}P(C_{k})\prod\limits_{i=1}^{n}P(x_{i} \mid C_{k})\Big{)}
+				\end{equation}
+				\]
+				as \(Z\) is constant for a given featureset.</p>
+			</div>
+			<div class="col-sm-1"></div>
+		</div>
+	</div>
+</div>
+{% endblock %}

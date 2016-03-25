@@ -1,0 +1,72 @@
+{% extends "layout.html" %}
+{% block head %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-slider.css') }}">
+  <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap-slider.js') }}"></script>
+  <style type='text/css'>
+    .slider.slider-horizontal {
+    width: 290px;
+    height: 20px;
+    }
+  </style>
+{% endblock %}
+{% block content %}
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-1">
+    </div>
+    <div class="col-sm-5">
+      <h2>Occupation Classifier</h2>
+      {% for message in form.job_title.errors %}
+      <div class="flash">{{ message }}</div>
+      {% endfor %}
+      <form class="form-horizontal" action="{{ url_for('classify') }}" method=post>
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+          <div class="col-sm-3"></div>
+          <div class="col-sm-9">
+            {{ form.noocc(id="ex1", **{'data-slider-max':20, 'data-slider-value':3}) }}
+          </div>
+        </div>
+        <div class="form-group">
+          {{ form.job_title.label(class="col-sm-3 control-label") }}
+          <div class="col-sm-9">
+            {{ form.job_title(class="form-control", placeholder="Job title") }}
+          </div>
+        </div>
+        {% if form.job_title.data %}
+        <div class="form-group">
+          {{ form.occdrop.label(class="col-sm-3 control-label") }}
+          <div class="col-sm-9">
+            {{ form.occdrop(class="form-control") }}
+          </div>
+        </div>
+        {% endif %} 
+        <div class="form-group">
+          <div class="col-sm-offset-3 col-sm-9">
+            {{ form.submit(class="btn btn-default") }}
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="col-sm-5">
+      <img src="{{ url_for('static', filename='img/con_matrix.png') }}" border=0>
+    </div>
+    <div class="col-sm-1">
+    </div>
+  </div>  
+</div>
+
+<script type="text/javascript">
+
+  {% if form.job_title.data %}
+    $('#occdrop')[0].selectedIndex = 0;
+  {% endif %}
+
+  $('#ex1').slider({
+    formatter: function(value){
+      return 'No of occupation codes: ' + value;
+    }
+  });
+</script>
+{% endblock %}
